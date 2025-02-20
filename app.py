@@ -99,9 +99,9 @@ if uploaded_file is not None:
         filtered_df = cleaned_df.copy()
         conditions = []
  
-        st.write("### Debugging Info")
-        st.write("Available Columns in DataFrame:", list(cleaned_df.columns))
-        st.write("Selected Filters (Category_Subcategory : Minimum Score):", scores)
+        # st.write("### Debugging Info")
+        # st.write("Available Columns in DataFrame:", list(cleaned_df.columns))
+        # st.write("Selected Filters (Category_Subcategory : Minimum Score):", scores)
  
         for category, subcats in selected_subcategories.items():
             for subcat in subcats:
@@ -111,7 +111,7 @@ if uploaded_file is not None:
                     filtered_df[full_col_name] = pd.to_numeric(
                         filtered_df[full_col_name], errors='coerce'
                     ).fillna(0)
-                    st.write(f"Applying filter: {full_col_name} >= {scores[full_col_name]}")
+                    # st.write(f"Applying filter: {full_col_name} >= {scores[full_col_name]}")
                     conditions.append(filtered_df[full_col_name] >= scores[full_col_name])
                 else:
                     st.write(f"Column not found: {full_col_name}")
