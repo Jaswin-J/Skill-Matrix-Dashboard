@@ -98,11 +98,6 @@ if uploaded_file is not None:
     if st.sidebar.button("Generate Report"):
         filtered_df = cleaned_df.copy()
         conditions = []
- 
-        # st.write("### Debugging Info")
-        # st.write("Available Columns in DataFrame:", list(cleaned_df.columns))
-        # st.write("Selected Filters (Category_Subcategory : Minimum Score):", scores)
- 
         for category, subcats in selected_subcategories.items():
             for subcat in subcats:
                 full_col_name = f"{category}_{subcat}"
@@ -111,7 +106,6 @@ if uploaded_file is not None:
                     filtered_df[full_col_name] = pd.to_numeric(
                         filtered_df[full_col_name], errors='coerce'
                     ).fillna(0)
-                    # st.write(f"Applying filter: {full_col_name} >= {scores[full_col_name]}")
                     conditions.append(filtered_df[full_col_name] >= scores[full_col_name])
                 else:
                     st.write(f"Column not found: {full_col_name}")
@@ -137,9 +131,13 @@ if uploaded_file is not None:
                         filter_cols.append(full_col_name)
             display_cols = [employee_col] + filter_cols
  
+            # Rename columns to show only subcategories
+            display_df = filtered_df[display_cols].copy().reset_index(drop=True)
+            display_df.columns = [col.split("_")[-1] if "_" in col else col for col in display_df.columns]
+            display_df.index += 1
+
             st.write("### Filtered Employee Report")
-            st.dataframe(filtered_df[display_cols])
- 
+            st.dataframe(display_df)
             # Option to download the filtered data as CSV
             csv = filtered_df[display_cols].to_csv(index=False).encode('utf-8')
             st.download_button(
