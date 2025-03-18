@@ -1,9 +1,8 @@
 import pandas as pd
 import streamlit as st
 import seaborn as sns
-import os
 from matplotlib.colors import rgb2hex
-from utils import rename_duplicate_columns
+
 
 st.set_page_config(page_title="Employee Skill Matrix", layout="wide")
 
@@ -13,6 +12,19 @@ def clean_scores(df):
         df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0)
         df[col] = df[col].astype(str).apply(lambda x: x.rstrip('0').rstrip('.') if '.' in x else x)
     return df
+
+def rename_duplicate_columns(columns):
+    seen = {}
+    new_columns = []
+    for col in columns:
+        if col in seen:
+            seen[col] += 1
+            new_columns.append(f"{col}_{seen[col]}")
+        else:
+            seen[col] = 0
+            new_columns.append(col)
+    return new_columns
+
 
 # Function to load data from an uploaded file
 @st.cache_data
